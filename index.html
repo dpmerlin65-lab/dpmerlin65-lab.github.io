@@ -1,0 +1,349 @@
+<!-- test -->
+line two
+  indented<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>s351 economics</title>
+<style>
+  :root{
+    --paper:#E7EDE3; --rule:#BCC8B4; --ruleSoft:#CDD7C6;
+    --ink:#1B2A2F; --inkSoft:#5A6B66;
+    --debit:#A32E27; --credit:#2C5C4A; --brass:#9A7B22;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       padding:28px 22px 34px;-webkit-font-smoothing:antialiased}
+  header{max-width:980px;margin:0 auto 26px}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--inkSoft)}
+  h1{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.15;
+     margin:8px 0 6px;letter-spacing:-.01em}
+  .standfirst{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--inkSoft);
+              margin:0;max-width:620px}
+  .grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:34px;
+        align-items:start;max-width:980px;margin:0 auto}
+  .panel{border-top:1.4px solid var(--ink);padding-top:16px}
+  .tabs{display:flex;border:1px solid var(--rule);margin-bottom:22px}
+  .tabs button{flex:1;padding:9px 6px;border:none;cursor:pointer;font-family:var(--sans);
+               font-size:12.5px;letter-spacing:.03em;background:transparent;color:var(--inkSoft)}
+  .tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .ctl{margin-bottom:18px}
+  .ctl .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .ctl label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--inkSoft)}
+  .ctl .val{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+  .ctl .note{font-size:11.5px;color:var(--inkSoft);margin-top:3px}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;
+                    background:transparent;margin:4px 0 0;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--rule)}
+  input[type=range]::-moz-range-track{height:2px;background:var(--rule)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;
+    border-radius:50%;background:var(--ink);margin-top:-6.5px;border:2px solid var(--paper)}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;
+    background:var(--ink);border:2px solid var(--paper)}
+  input:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:4px}
+  .compose{border-left:2px solid var(--rule);padding-left:14px;margin-bottom:4px}
+  .blended{font-family:var(--mono);font-size:13px;margin-bottom:16px}
+  .check{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--inkSoft);
+         margin-bottom:20px;cursor:pointer}
+  .check input{accent-color:var(--ink);width:14px;height:14px}
+  .headline{font-family:var(--mono);font-size:58px;line-height:1.05;letter-spacing:-.03em;
+            font-variant-numeric:tabular-nums;margin:4px 0 2px}
+  .sub{font-family:var(--serif);font-size:15px;color:var(--inkSoft)}
+  .sub .alt{font-family:var(--mono);font-size:13.5px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+         border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:26px}
+  .stats div{padding:12px 14px 12px 0}
+  .stats .k{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--inkSoft)}
+  .stats .v{font-family:var(--mono);font-size:19px;margin:3px 0 1px;font-variant-numeric:tabular-nums}
+  .stats .n{font-size:11px;color:var(--inkSoft)}
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  figure{margin:0}
+  figcaption{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--inkSoft);
+             margin-bottom:6px}
+  svg{display:block;width:100%;height:auto;max-width:100%;overflow:visible}
+  #chartT,#chartG{min-height:120px}
+  .verdict{font-family:var(--serif);font-size:14.5px;line-height:1.55;margin-top:22px;max-width:560px}
+  .verdict strong{font-family:var(--mono);font-weight:400}
+  footer{max-width:980px;margin:30px auto 0;border-top:1px solid var(--rule);padding-top:12px;
+         font-size:11.5px;color:var(--inkSoft);line-height:1.6}
+  @media (max-width:760px){.grid{grid-template-columns:1fr;gap:26px}.charts{grid-template-columns:1fr}
+    .headline{font-size:46px}}
+  @media print{body{background:#fff}.tabs{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Seed an ETF, or sell and buy the index</div>
+  <h1>s351 economics</h1>
+  <p class="standfirst">Deferral bought with a fee. Market exposure is held equal across both
+  paths and the deferred tax is scored as cash, so what remains is the tax difference alone
+  &mdash; per $100 of the contributed basket.</p>
+</header>
+
+<div class="grid">
+  <section class="panel">
+    <div class="tabs" role="group" aria-label="Exit assumption">
+      <button id="tabSell" aria-pressed="true">Client sells</button>
+      <button id="tabDeath" aria-pressed="false">Held to death</button>
+    </div>
+
+    <div class="ctl">
+      <div class="row"><label for="psi">Fee gap over the index</label><span class="val" id="psiV"></span></div>
+      <input type="range" id="psi" min="0" max="0.01" step="0.0001" value="0.0034">
+      <div class="note">Fund fee minus the index alternative</div>
+    </div>
+
+    <div class="ctl" id="gWrap">
+      <div class="row"><label for="g">Blended gain on the basket</label><span class="val" id="gV"></span></div>
+      <input type="range" id="g" min="0" max="1" step="0.01" value="0.6">
+      <div class="note">Everything contributed, not just the concentrated name</div>
+    </div>
+
+    <div class="compose" id="composeWrap" hidden>
+      <div class="ctl">
+        <div class="row"><label for="wc">Concentrated name</label><span class="val" id="wcV"></span></div>
+        <input type="range" id="wc" min="0.05" max="1" step="0.01" value="0.2">
+        <div class="note">Sponsors typically cap near 20%</div>
+      </div>
+      <div class="ctl">
+        <div class="row"><label for="gs">Gain on the diversifier sleeve</label><span class="val" id="gsV"></span></div>
+        <input type="range" id="gs" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <div class="blended" id="blended"></div>
+    </div>
+
+    <label class="check"><input type="checkbox" id="compose">
+      Build the basket from a concentrated name plus a sleeve</label>
+
+    <div class="ctl">
+      <div class="row"><label for="T">Horizon</label><span class="val" id="TV"></span></div>
+      <input type="range" id="T" min="1" max="40" step="1" value="20">
+    </div>
+    <div class="ctl">
+      <div class="row"><label for="tau">Capital gains rate</label><span class="val" id="tauV"></span></div>
+      <input type="range" id="tau" min="0.15" max="0.4" step="0.001" value="0.238">
+    </div>
+    <div class="ctl">
+      <div class="row"><label for="fa">After-tax cash rate</label><span class="val" id="faV"></span></div>
+      <input type="range" id="fa" min="0" max="0.05" step="0.0005" value="0.02275">
+    </div>
+  </section>
+
+  <section>
+    <div class="panel" style="margin-bottom:26px">
+      <div class="eyebrow" style="letter-spacing:.08em">Value of seeding rather than selling</div>
+      <div class="headline" id="headline"></div>
+      <div class="sub" id="sub"></div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="charts">
+      <figure><figcaption>Value against horizon</figcaption><div id="chartT"></div></figure>
+      <figure><figcaption>Value against blended gain</figcaption><div id="chartG"></div></figure>
+    </div>
+    <p class="verdict" id="verdict"></p>
+  </section>
+</div>
+
+<footer>
+  Exposure is matched by scaling the seeded position by (1&nbsp;&minus;&nbsp;&tau;g)e<sup>&psi;T</sup>
+  and holding the released proceeds in cash, so the figure is the tax difference alone and carries no
+  return assumption. Advisory fees charged on both paths cancel and do not appear. Recognition risk,
+  foregone loss harvesting, and any change in law are not priced.
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var S = { tau:0.238, fa:0.02275, psi:0.0034, T:20, g:0.6,
+            stepUp:false, compose:false, wc:0.2, gs:0.5 };
+
+  function value(p){
+    var N = 1 - p.tau*p.g,
+        s = N*Math.exp(p.psi*p.T),
+        deferred = N*(1-s)*Math.exp(p.fa*p.T);
+    return p.stepUp ? deferred : s*p.tau*(1-p.g) + deferred - p.tau*N;
+  }
+  function withG(p,g){ return {tau:p.tau,fa:p.fa,psi:p.psi,T:p.T,g:g,stepUp:p.stepUp}; }
+  function withT(p,T){ return {tau:p.tau,fa:p.fa,psi:p.psi,T:T,g:p.g,stepUp:p.stepUp}; }
+
+  function breakeven(p){
+    if(p.stepUp){
+      var gs = (1-Math.exp(-p.psi*p.T))/p.tau;
+      return (gs>0 && gs<=1) ? gs : null;
+    }
+    var lo=0, hi=1;
+    if(value(withG(p,lo))*value(withG(p,hi))>0) return null;
+    for(var i=0;i<80;i++){
+      var mid=(lo+hi)/2;
+      if(value(withG(p,lo))*value(withG(p,mid))<=0) hi=mid; else lo=mid;
+    }
+    return (lo+hi)/2;
+  }
+
+  function money(v){ return (v<0?"\u2212":"+")+"$"+Math.abs(v).toFixed(2); }
+  function pct(v,d){ return (v*100).toFixed(d)+"%"; }
+
+  var NS="http://www.w3.org/2000/svg";
+  function el(n,a,t){
+    var e=document.createElementNS(NS,n),k;
+    for(k in a){ if(a.hasOwnProperty(k)) e.setAttribute(k,a[k]); }
+    if(t!=null) e.appendChild(document.createTextNode(t));
+    return e;
+  }
+  /* split a polyline at its zero crossings so each piece is wholly above or below */
+  function split(pts){
+    var segs=[],cur=[pts[0]],pos=pts[0].y>=0,i,s,t,xc;
+    for(i=1;i<pts.length;i++){
+      s=pts[i].y>=0;
+      if(s!==pos){
+        t=-pts[i-1].y/(pts[i].y-pts[i-1].y);
+        xc=pts[i-1].x+t*(pts[i].x-pts[i-1].x);
+        cur.push({x:xc,y:0}); segs.push({pts:cur,pos:pos});
+        cur=[{x:xc,y:0},pts[i]]; pos=s;
+      } else cur.push(pts[i]);
+    }
+    segs.push({pts:cur,pos:pos});
+    return segs;
+  }
+  function chart(host,opts){
+    var pts=opts.pts,W=520,H=210,ml=52,mr=14,mt=16,mb=34,
+        iw=W-ml-mr,ih=H-mt-mb,i,j,
+        xs=[],ys=[],x0,x1,span,yTop,yBot;
+    for(i=0;i<pts.length;i++){ xs.push(pts[i].x); ys.push(pts[i].y); }
+    x0=Math.min.apply(null,xs); x1=Math.max.apply(null,xs);
+    span=Math.max(Math.abs(Math.min.apply(null,ys)),Math.abs(Math.max.apply(null,ys)),1);
+    yTop=span*1.15; yBot=-span*1.15;
+    function X(v){ return ml+((v-x0)/((x1-x0)||1))*iw; }
+    function Y(v){ return mt+((yTop-v)/(yTop-yBot))*ih; }
+
+    var svg=el("svg",{viewBox:"0 0 "+W+" "+H,width:W,height:H,
+                      preserveAspectRatio:"xMidYMid meet",role:"img",
+                      "aria-label":opts.title});
+
+    var grid=[yTop,yTop/2,0,yBot/2,yBot];
+    for(i=0;i<grid.length;i++){
+      var v=grid[i],zero=(v===0);
+      svg.appendChild(el("line",{x1:ml,x2:ml+iw,y1:Y(v),y2:Y(v),
+        stroke:zero?"#1B2A2F":"#CDD7C6","stroke-width":zero?1.4:0.8}));
+      svg.appendChild(el("text",{x:ml-8,y:Y(v)+3.5,"text-anchor":"end",
+        "font-family":MONO,"font-size":10.5,fill:"#5A6B66"},
+        zero?"0":(v<0?"\u2212":"")+Math.abs(v).toFixed(0)));
+    }
+
+    var segs=split(pts);
+    for(i=0;i<segs.length;i++){
+      var sp=segs[i].pts,up=segs[i].pos,d="";
+      for(j=0;j<sp.length;j++) d+=(j?"L":"M")+X(sp[j].x).toFixed(2)+","+Y(sp[j].y).toFixed(2)+" ";
+      var area=d+"L"+X(sp[sp.length-1].x).toFixed(2)+","+Y(0).toFixed(2)+
+               " L"+X(sp[0].x).toFixed(2)+","+Y(0).toFixed(2)+" Z";
+      svg.appendChild(el("path",{d:area,fill:up?"#2C5C4A":"#A32E27","fill-opacity":0.16,stroke:"none"}));
+      svg.appendChild(el("path",{d:d,fill:"none",stroke:up?"#2C5C4A":"#A32E27",
+        "stroke-width":2,"stroke-linejoin":"round"}));
+    }
+
+    if(opts.cross!=null && opts.cross>=x0 && opts.cross<=x1){
+      svg.appendChild(el("line",{x1:X(opts.cross),x2:X(opts.cross),y1:mt,y2:mt+ih,
+        stroke:"#9A7B22","stroke-width":1.2,"stroke-dasharray":"3 3"}));
+      svg.appendChild(el("circle",{cx:X(opts.cross),cy:Y(0),r:3.6,fill:"#9A7B22"}));
+      svg.appendChild(el("text",{x:X(opts.cross),y:mt-4,"text-anchor":"middle",
+        "font-family":MONO,"font-size":10.5,fill:"#9A7B22"},opts.crossLabel));
+    }
+
+    for(i=0;i<opts.ticks.length;i++){
+      svg.appendChild(el("text",{x:X(opts.ticks[i].v),y:mt+ih+18,"text-anchor":"middle",
+        "font-family":MONO,"font-size":10.5,fill:"#5A6B66"},opts.ticks[i].l));
+    }
+    svg.appendChild(el("text",{x:ml+iw/2,y:H-1,"text-anchor":"middle",
+      "font-family":SANS,"font-size":10.5,fill:"#5A6B66"},opts.xLabel));
+
+    while(host.firstChild) host.removeChild(host.firstChild);
+    host.appendChild(svg);
+  }
+
+  var MONO="ui-monospace,Menlo,Consolas,monospace", SANS="system-ui,sans-serif";
+  function $(id){ return document.getElementById(id); }
+
+  function render(){
+    var gEff = S.compose ? (S.wc*1 + (1-S.wc)*S.gs) : S.g;
+    var p = {tau:S.tau, fa:S.fa, psi:S.psi, T:S.T, g:gEff, stepUp:S.stepUp};
+    var v = 100*value(p),
+        gross = 100*value({tau:p.tau,fa:p.fa,psi:0,T:p.T,g:gEff,stepUp:p.stepUp}),
+        other = 100*value({tau:p.tau,fa:p.fa,psi:p.psi,T:p.T,g:gEff,stepUp:!p.stepUp}),
+        gStar = breakeven(p), i;
+
+    $("psiV").textContent=pct(S.psi,2);
+    $("gV").textContent=pct(S.g,0);
+    $("wcV").textContent=pct(S.wc,0);
+    $("gsV").textContent=pct(S.gs,0);
+    $("TV").textContent=S.T+" yr";
+    $("tauV").textContent=pct(S.tau,1);
+    $("faV").textContent=pct(S.fa,2);
+    $("blended").textContent="blended gain = "+pct(gEff,1);
+    $("gWrap").hidden=S.compose;
+    $("composeWrap").hidden=!S.compose;
+    $("tabSell").setAttribute("aria-pressed",String(!S.stepUp));
+    $("tabDeath").setAttribute("aria-pressed",String(S.stepUp));
+
+    var h=$("headline");
+    h.textContent=money(v);
+    h.style.color = v>=0 ? "var(--credit)" : "var(--debit)";
+    $("sub").innerHTML="per $100 contributed, "+
+      (S.stepUp ? "shares held until the basis steps up" : "shares sold after "+S.T+" years")+
+      ' &middot; <span class="alt">'+(S.stepUp?"sells instead: ":"held to death: ")+money(other)+"</span>";
+
+    var deferredTax=100*S.tau*gEff, feeCost=100*(1-Math.exp(-S.psi*S.T)),
+        capture = gross!==0 ? (gross-v)/Math.abs(gross) : 0;
+    var rows=[["Tax deferred","$"+deferredTax.toFixed(2),"created at contribution"],
+              ["Fee cost","\u2212$"+feeCost.toFixed(2),pct(S.psi,2)+" over "+S.T+" yr"],
+              ["Before fees",money(gross),"same trade, no fee gap"],
+              ["Fund's share",gross>0?(capture*100).toFixed(0)+"%":"\u2014","of the benefit"]];
+    $("stats").innerHTML=rows.map(function(r){
+      return '<div><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div><div class="n">'+r[2]+'</div></div>';
+    }).join("");
+
+    var byT=[], byG=[];
+    for(i=0;i<=80;i++){ var t=i*0.5; byT.push({x:t,y:100*value(withT(p,t))}); }
+    for(i=0;i<=100;i++){ byG.push({x:i/100,y:100*value(withG(p,i/100))}); }
+    var crossT=null;
+    for(i=1;i<byT.length;i++){ if(byT[i-1].y>0 && byT[i].y<=0){ crossT=byT[i].x; break; } }
+
+    chart($("chartT"),{pts:byT,cross:crossT,
+      crossLabel:crossT!=null?crossT.toFixed(0)+" yr":"",title:"Value against horizon",
+      xLabel:"years held",ticks:[0,10,20,30,40].map(function(v){return {v:v,l:String(v)};})});
+    chart($("chartG"),{pts:byG,cross:gStar,
+      crossLabel:gStar!=null?pct(gStar,0):"",title:"Value against blended gain",
+      xLabel:"blended gain on the basket",
+      ticks:[0,0.25,0.5,0.75,1].map(function(v){return {v:v,l:pct(v,0)};})});
+
+    $("verdict").innerHTML = gStar==null
+      ? (S.stepUp
+         ? "No gain is large enough at this fee gap &mdash; the drag exceeds the whole step-up benefit."
+         : "No gain is large enough at this fee gap. The fee overtakes the deferral at every level.")
+      : "The basket needs a blended gain above <strong>"+pct(gStar,0)+"</strong> to break even"+
+        (S.stepUp
+         ? ", and the cash rate does not enter that threshold &mdash; both clients hold the same portfolio forever, so only fee drag is left."
+         : ". The deferral compounds on the tax deferred; the fee compounds on the whole basket.");
+  }
+
+  [["psi","psi"],["g","g"],["wc","wc"],["gs","gs"],["T","T"],["tau","tau"],["fa","fa"]]
+    .forEach(function(pair){
+      $(pair[0]).addEventListener("input",function(e){
+        S[pair[1]] = pair[1]==="T" ? parseInt(e.target.value,10) : parseFloat(e.target.value);
+        render();
+      });
+    });
+  $("compose").addEventListener("change",function(e){ S.compose=e.target.checked; render(); });
+  $("tabSell").addEventListener("click",function(){ S.stepUp=false; render(); });
+  $("tabDeath").addEventListener("click",function(){ S.stepUp=true; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
