@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TLH Wedge Explorer — Single One-Time Gain</title>
+<style>
+body{font-family:sans-serif;background:#f5f4f0;padding:12px;font-size:13px}
+.card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px;margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.row label{flex:0 0 150px;font-size:11px;color:#666;align-self:center}
+.row input{flex:1;min-width:100px}
+.row span{flex:0 0 48px;font-size:11px;font-weight:bold;text-align:right}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.btn{padding:4px 10px;border-radius:14px;border:1px solid #aaa;background:#f0efeb;font-size:11px;cursor:pointer}
+.btn.on{color:#fff}
+.lbl{font-size:10px;color:#888;margin-bottom:3px;margin-top:6px}
+.eb{font-size:11px;font-weight:bold;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:4px}
+.pos{background:#d4f5e9;color:#0a5}
+.neg{background:#fde8e8;color:#a00}
+.met{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px 10px}
+.met-inner{display:grid;grid-template-columns:1fr 1fr;gap:0 8px;margin-top:4px}
+.ml{font-size:10px;color:#888;margin-bottom:2px}
+.mv{font-size:16px;font-weight:bold}
+.mc{font-size:15px;font-weight:bold}
+.ms{font-size:10px;color:#888}
+.mk{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.04em}
+.leg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:#555}
+.ls{width:16px;height:3px;border-radius:2px}
+h2{font-size:15px;font-weight:500;margin-bottom:2px}
+.sub{font-size:11px;color:#888;margin-bottom:8px}
+footer{font-size:10px;color:#aaa;margin-top:16px;padding-top:10px;border-top:1px solid #ddd}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>TLH Wedge Explorer</h2>
+<p class="sub">Single one-time capital gain · risk-equivalent wedge · illustrative parameters</p>
+
+<div class="lbl">Gain character (tau_g)</div>
+<div class="btns">
+  <button class="btn" id="g-st" onclick="setGT('st')">Short-term (tau_l)</button>
+  <button class="btn" id="g-lt" onclick="setGT('lt')">Long-term (tau_c)</button>
+</div>
+<div class="lbl">Drift zero (isolate kernel)</div>
+<div class="btns">
+  <button class="btn" id="dz-all" onclick="setDZ()">All drift=0</button>
+  <button class="btn" id="dz-rst" onclick="rstDZ()">Restore drift</button>
+</div>
+
+<div class="lbl">Disposition (tau_r)</div>
+<div class="btns">
+  <button class="btn" id="r-liq" onclick="setRec('liq')">Liquidation</button>
+  <button class="btn" id="r-step" onclick="setRec('step')">Step-up on death</button>
+</div>
+<div class="lbl">Configurations shown</div>
+<div class="btns">
+  <button class="btn" id="s-lo" onclick="tog('lo')">Long-only</button>
+  <button class="btn" id="s-145" onclick="tog('s145')">145/45</button>
+  <button class="btn" id="s-200" onclick="tog('s200')">200/100</button>
+</div>
+</div>
+
+<div class="card">
+<div class="lbl">Short-term capital gains rate</div>
+<div class="row"><label>tau_l (base=43.8%)</label><input type="range" id="tl" min="20" max="55" value="44" oninput="upd()"><span id="vtl">43.8%</span></div>
+<div class="lbl">Long-term capital gains rate</div>
+<div class="row"><label>tau_c (base=28.8%)</label><input type="range" id="tc" min="10" max="40" value="29" oninput="upd()"><span id="vtc">28.8%</span></div>
+<div class="lbl">Gain size G</div>
+<div class="row"><label>G ($M)</label><input type="range" id="gg" min="1" max="20" value="5" oninput="upd()"><span id="vgg">$5M</span></div>
+<div class="lbl">N — years of TLH before the gain date</div>
+<div class="row"><label>N (years)</label><input type="range" id="horiz" min="1" max="30" step="1" value="10" oninput="upd()"><span id="vhoriz">10y</span></div>
+<div class="lbl">Common information ratio (active configs)</div>
+<div class="row"><label>IR (base=0.90)</label><input type="range" id="ir" min="50" max="130" step="5" value="90" oninput="upd()"><span id="vir">0.90</span></div>
+</div>
+
+<div class="card">
+<div class="lbl" style="margin-top:0">Long-only manager fee (psi_mgr)</div>
+<div class="row"><label>Mgmt fee (bps)</label><input type="range" id="lomgr" min="0" max="50" step="5" value="20" oninput="upd()"><span id="vlomgr">20bps</span></div>
+<span class="eb" id="blo">eta=-0.20%</span>
+
+<div class="lbl" style="margin-top:10px">145/45 fees: mgr / fin / wm</div>
+<div class="row"><label>Mgmt fee (bps)</label><input type="range" id="mgr145" min="0" max="150" step="5" value="40" oninput="upd()"><span id="vmgr145">40bps</span></div>
+<div class="row"><label>Fin fee (bps)</label><input type="range" id="fin145" min="0" max="150" step="5" value="40" oninput="upd()"><span id="vfin145">40bps</span></div>
+<div class="row"><label>WM fee (bps)</label><input type="range" id="wm145" min="0" max="200" step="10" value="100" oninput="upd()"><span id="vwm145">100bps</span></div>
+<span class="eb" id="b145">eta 145/45</span>
+
+<div class="lbl" style="margin-top:10px">200/100 fees: mgr / fin / wm</div>
+<div class="row"><label>Mgmt fee (bps)</label><input type="range" id="mgr200" min="0" max="200" step="5" value="90" oninput="upd()"><span id="vmgr200">90bps</span></div>
+<div class="row"><label>Fin fee (bps)</label><input type="range" id="fin200" min="0" max="200" step="5" value="90" oninput="upd()"><span id="vfin200">90bps</span></div>
+<div class="row"><label>WM fee (bps)</label><input type="range" id="wm200" min="0" max="200" step="10" value="100" oninput="upd()"><span id="vwm200">100bps</span></div>
+<span class="eb" id="b200">eta 200/100</span>
+</div>
+
+<div class="card">
+<div class="lbl">Y-axis max (0 = auto)</div>
+<div class="row"><label>Max %</label><input type="range" id="ymax" min="0" max="120" step="5" value="0" oninput="upd()"><span id="vymax">auto</span></div>
+</div>
+
+<div class="card">
+<div id="ctitle" style="font-size:13px;font-weight:500;margin-bottom:2px">Chart</div>
+<div id="csub" style="font-size:11px;color:#888;margin-bottom:8px">Loading...</div>
+<div class="leg" id="leg"></div>
+<canvas id="ch" width="600" height="240" style="width:100%;display:block;border:1px solid #eee;border-radius:6px"></canvas>
+</div>
+
+<div id="mets" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"></div>
+
+<footer>TLH Wedge Explorer · base case tau_l=43.8%, tau_c=28.8%, f_a=2.1% · lambda(t)=lambda_inf+lambda_delta*exp(-beta*t), illustrative · not investment advice</footer>
+
+<script>
+var FA=0.021;
+var COL={lo:'#d63a2a',s145:'#1baf7a',s200:'#2a78d6'};
+var NM={lo:'Long-only',s145:'145/45',s200:'200/100'};
+var LP={
+  lo:  {li:0.000,ld:0.150,bt:0.446, te:0,     mg:0.002, fi:0,     wm:0},
+  s145:{li:0.050,ld:0.450,bt:1.000, te:0.020, mg:0.004, fi:0.004, wm:0.010},
+  s200:{li:0.140,ld:0.610,bt:1.000, te:0.040, mg:0.009, fi:0.009, wm:0.010}
+};
+var md='oad', rc='liq', gt='st';
+var sh={lo:true,s145:true,s200:true};
+var dz={lo:false,s145:false,s200:false};
+
+function gid(x){return document.getElementById(x);}
+function gnum(x){return parseInt(gid(x).value,10);}
+
+function getP(){
+  var tl=gnum('tl')/100, tc=gnum('tc')/100;
+  return{
+    tl:tl,
+    tc:tc,
+    toff:(gt==='st')?tl:tc,
+    gamt:gnum('gg')*1000000,
+    ir:gnum('ir')/100,
+    lomgr:gnum('lomgr')/10000,
+    mgr145:gnum('mgr145')/10000,
+    fin145:gnum('fin145')/10000,
+    wm145:gnum('wm145')/10000,
+    mgr200:gnum('mgr200')/10000,
+    fin200:gnum('fin200')/10000,
+    wm200:gnum('wm200')/10000,
+    ymx:gnum('ymax'),
+    horiz:gnum('horiz')
+  };
+}
+
+function lval(tt,pp){return pp.li+pp.ld*Math.exp(-pp.bt*tt);}
+
+function lamInt(TT,pp){
+  // Unweighted: Lambda(T) = integral_0^T lambda(t) dt
+  // NCL per dollar of initial capital A0 — consistent with published cumulative NCL figures
+  return pp.li*TT+pp.ld/pp.bt*(1-Math.exp(-pp.bt*TT));
+}
+
+function getEta(kk,pp){
+  if(kk==='lo') return -pp.lomgr;
+  var ss=LP[kk];
+  if(kk==='s145') return (1-pp.tc)*pp.ir*ss.te-(1-pp.tl)*pp.fin145-pp.mgr145-pp.wm145;
+  if(kk==='s200') return (1-pp.tc)*pp.ir*ss.te-(1-pp.tl)*pp.fin200-pp.mgr200-pp.wm200;
+}
+
+function driftInt(TT,ee,kk){
+  var pp=LP[kk],nn=40,dt=TT/nn,ss=0,jj,tt,ll;
+  for(jj=0;jj<nn;jj++){
+    tt=(jj+0.5)*dt;
+    ll=lval(tt,pp);
+    if(ll>0.00001) ss+=Math.exp(-FA*tt)/ll*dt;
+  }
+  return ss;
+}
+
+
+function wedOAD(TT,kk,ee,pp){
+  if(kk==='lo'&&TT>5) return null;
+  var tr=(rc==='liq')?pp.tc:0;
+  var kappa=pp.toff-tr;  // kernel: tau_g - tau_r, constant, no e^{fa(T-t)}
+  var ee2=dz[kk]?0:ee;
+  var lp2=LP[kk];
+  var Lm=lamInt(TT,lp2);  // unweighted Lambda(T)
+  if(Lm<=0||!isFinite(Lm)) return null;
+  var ar=1/Lm;
+  var dr=(Math.abs(ee2)>0.00001)?(1-Math.exp(-ee2*TT))*Math.exp(FA*TT)*ar:0;
+  return(dr+kappa)*100;
+}
+
+function badge(id,vv){
+  var el=gid(id);
+  el.textContent=(vv>=0?'+':'')+( vv*100).toFixed(2)+'%';
+  el.className='eb '+(vv>=0?'pos':'neg');
+}
+
+function build(){
+  var pp=getP();
+  var etas={
+    lo:getEta('lo',pp),
+    s145:getEta('s145',pp),
+    s200:getEta('s200',pp)
+  };
+
+  badge('blo',etas.lo);
+  badge('b145',etas.s145);
+  badge('b200',etas.s200);
+
+  var keys=[];
+  var allKeys=['lo','s145','s200'];
+  var ki,kk,ee;
+  for(ki=0;ki<allKeys.length;ki++){if(sh[allKeys[ki]])keys.push(allKeys[ki]);}
+
+  var maxT=pp.horiz;
+  var steps=40;
+  var ts=[],ii;
+  for(ii=1;ii<=steps;ii++) ts.push(maxT*ii/steps);
+
+  var sdata={};
+  for(ki=0;ki<keys.length;ki++){
+    kk=keys[ki]; ee=etas[kk];
+    var vlist=[];
+    for(ii=0;ii<ts.length;ii++){
+      var vv=wedOAD(ts[ii],kk,ee,pp);
+      vlist.push((vv!==null&&isFinite(vv))?vv:null);
+    }
+    sdata[kk]=vlist;
+  }
+
+  var ylo=0,yhi=0,yp,jj,vlist2,vv2;
+  for(ki=0;ki<keys.length;ki++){
+    vlist2=sdata[keys[ki]];
+    for(jj=0;jj<vlist2.length;jj++){
+      if(vlist2[jj]!==null){
+        if(vlist2[jj]<ylo)ylo=vlist2[jj];
+        if(vlist2[jj]>yhi)yhi=vlist2[jj];
+      }
+    }
+  }
+  yp=(yhi-ylo)*0.08;
+  ylo-=yp; yhi+=yp;
+  if(ylo>-0.5)ylo=-0.5;
+  if(pp.ymx>0) yhi=pp.ymx;
+
+  var cv=gid('ch');
+  var dpr=window.devicePixelRatio||1;
+  var WW=cv.offsetWidth||window.innerWidth||340;
+  var HH=220;
+  cv.width=Math.round(WW*dpr);
+  cv.height=Math.round(HH*dpr);
+  cv.style.height=HH+'px';
+  var cx=cv.getContext('2d');
+  cx.scale(dpr,dpr);
+  cx.clearRect(0,0,WW,HH);
+
+  var pl=40,pr=10,pt=10,pb=28;
+  var cw=WW-pl-pr, ch=HH-pt-pb;
+
+  function px(idx){return pl+cw*idx/(steps-1);}
+  function py(val){return pt+ch*(1-(val-ylo)/(yhi-ylo));}
+
+  cx.font='10px sans-serif';
+
+  var ni=5,gi;
+  for(gi=0;gi<=ni;gi++){
+    var gv=ylo+(yhi-ylo)*gi/ni;
+    var gy=py(gv);
+    cx.strokeStyle='rgba(0,0,0,0.06)';cx.lineWidth=1;
+    cx.beginPath();cx.moveTo(pl,gy);cx.lineTo(pl+cw,gy);cx.stroke();
+    // Skip label if close to zero — the dedicated zero label covers it
+    if(Math.abs(gv)>0.05){
+      cx.fillStyle='#888';cx.textAlign='right';cx.textBaseline='middle';
+      cx.fillText(gv.toFixed(1)+'%',pl-3,gy);
+    }
+  }
+  var nx=(maxT<=5)?5:(maxT<=10)?10:(maxT<=20)?10:10;
+  for(gi=0;gi<=nx;gi++){
+    var gx=pl+cw*gi/nx;
+    cx.fillStyle='#888';cx.textAlign='center';cx.textBaseline='top';
+    cx.fillText((maxT*gi/nx).toFixed(0)+'y',gx,pt+ch+3);
+  }
+  var zy=py(0);
+  cx.strokeStyle='rgba(0,0,0,0.35)';cx.lineWidth=1;
+  cx.setLineDash([4,3]);
+  cx.beginPath();cx.moveTo(pl,zy);cx.lineTo(pl+cw,zy);cx.stroke();
+  cx.setLineDash([]);
+  // Label the zero line if 0 is within the visible range
+  if(ylo<=0&&yhi>=0){
+    cx.fillStyle='#444';cx.font='bold 10px sans-serif';
+    cx.textAlign='right';cx.textBaseline='middle';
+    cx.fillText('0.0%',pl-3,zy);
+    cx.font='10px sans-serif';
+  }
+  cx.strokeStyle='rgba(0,0,0,0.2)';cx.lineWidth=0.5;
+  cx.beginPath();cx.moveTo(pl,pt);cx.lineTo(pl,pt+ch);cx.moveTo(pl,pt+ch);cx.lineTo(pl+cw,pt+ch);cx.stroke();
+
+  for(ki=0;ki<keys.length;ki++){
+    kk=keys[ki]; vlist2=sdata[kk];
+    cx.strokeStyle=COL[kk];cx.lineWidth=2.5;
+    cx.lineJoin='round';cx.lineCap='round';
+    cx.beginPath();
+    var started=false;
+    for(jj=0;jj<vlist2.length;jj++){
+      if(vlist2[jj]===null){started=false;continue;}
+      if(!started){cx.moveTo(px(jj),py(vlist2[jj]));started=true;}
+      else cx.lineTo(px(jj),py(vlist2[jj]));
+    }
+    cx.stroke();
+  }
+
+  var lh='';
+  for(ki=0;ki<keys.length;ki++){
+    kk=keys[ki];
+    lh+='<div class="li"><div class="ls" style="background:'+COL[kk]+'"></div>'+NM[kk]+' eta='+(etas[kk]*100).toFixed(2)+'%</div>';
+  }
+  gid('leg').innerHTML=lh;
+
+  gid('ctitle').textContent=
+    'Omega*/G — one-and-done wedge'+
+    ' - '+(gt==='st'?'short-term gain':'long-term gain')+
+    ' - '+(rc==='liq'?'liquidation':'step-up');
+  gid('csub').textContent=
+    'tau_l='+(pp.tl*100).toFixed(1)+'% tau_c='+(pp.tc*100).toFixed(1)+'% tau_g='+(pp.toff*100).toFixed(1)+'% · G=$'+(pp.gamt/1e6).toFixed(0)+'M · N='+(pp.horiz)+'y - long-only to N=5y only';
+
+  var rt=pp.horiz;
+  var mh='';
+  for(ki=0;ki<keys.length;ki++){
+    kk=keys[ki]; ee=etas[kk];
+    vv2=wedOAD(rt,kk,ee,pp);
+    var Lm2=lamInt(rt,LP[kk]);  // unweighted Lambda at actual horizon
+    var ar2raw=(Lm2>0&&isFinite(Lm2))?(1/Lm2):null;
+    var ar2str=ar2raw!==null?ar2raw.toFixed(2)+'x G':'--';
+    var acap=ar2raw!==null&&pp.gamt>0?'$'+(ar2raw*pp.gamt/1e6).toFixed(1)+'M':'--';
+    var roc=ar2raw!==null&&vv2!==null?(vv2/100/(ar2raw*Math.exp(FA*rt))*100).toFixed(1)+'%':'--';
+    var dl=(vv2!==null)?'$'+(vv2/100*pp.gamt/1e3).toFixed(0)+'k':'--';
+    var dp=(vv2!==null)?vv2.toFixed(2)+'%':'ends T=5y';
+    var ee2=dz[kk]?0:ee;
+    mh+='<div class="met">'+
+      '<div class="ml">'+NM[kk]+(dz[kk]?' [drift=0]':'')+'</div>'+
+      '<div class="met-inner">'+
+        '<div>'+
+          '<div class="mk">Omega*/G</div>'+
+          '<div class="mv" style="color:'+COL[kk]+'">'+dp+'</div>'+
+          '<div class="ms">'+dl+'</div>'+
+        '</div>'+
+        '<div style="border-left:1px solid #eee;padding-left:8px">'+
+          '<div class="mk">Capital needed</div>'+
+          '<div class="mc" style="color:#444">'+ar2str+'</div>'+
+          '<div class="ms">'+acap+' &middot; RoC '+roc+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="ms" style="margin-top:4px">eta='+(ee2*100).toFixed(2)+'% &middot; T='+rt+'y</div>'+
+    '</div>';
+  }
+  gid('mets').innerHTML=mh;
+}
+
+function upd(){
+  var pp=getP();
+  gid('vtl').textContent=(pp.tl*100).toFixed(1)+'%';
+  gid('vtc').textContent=(pp.tc*100).toFixed(1)+'%';
+  gid('vgg').textContent='$'+gnum('gg')+'M';
+  gid('vhoriz').textContent=gnum('horiz')+'y';
+  gid('vir').textContent=(pp.ir).toFixed(2);
+  gid('vlomgr').textContent=gnum('lomgr')+'bps';
+  gid('vmgr145').textContent=gnum('mgr145')+'bps';
+  gid('vfin145').textContent=gnum('fin145')+'bps';
+  gid('vwm145').textContent=gnum('wm145')+'bps';
+  gid('vmgr200').textContent=gnum('mgr200')+'bps';
+  gid('vfin200').textContent=gnum('fin200')+'bps';
+  gid('vwm200').textContent=gnum('wm200')+'bps';
+  var ym=gnum('ymax');
+  gid('vymax').textContent=ym>0?ym+'%':'auto';
+  build();
+}
+
+
+function setRec(rr){
+  rc=rr;
+  gid('r-liq').style.background=(rr==='liq')?'#2a78d6':'';
+  gid('r-step').style.background=(rr==='step')?'#2a78d6':'';
+  gid('r-liq').style.color=(rr==='liq')?'#fff':'';
+  gid('r-step').style.color=(rr==='step')?'#fff':'';
+  build();
+}
+
+function tog(kk){
+  sh[kk]=!sh[kk];
+  var bt=gid('s-'+kk.replace('s',''));
+  if(kk==='s145') bt=gid('s-145');
+  if(kk==='s200') bt=gid('s-200');
+  if(kk==='lo') bt=gid('s-lo');
+  bt.style.background=sh[kk]?COL[kk]:'';
+  bt.style.color=sh[kk]?'#fff':'';
+  bt.style.borderColor=sh[kk]?COL[kk]:'';
+  build();
+}
+</script>
+
+<script>
+function setGT(gg){
+  gt=gg;
+  gid('g-st').style.background=(gg==='st')?'#2a78d6':'';
+  gid('g-st').style.color=(gg==='st')?'#fff':'';
+  gid('g-lt').style.background=(gg==='lt')?'#2a78d6':'';
+  gid('g-lt').style.color=(gg==='lt')?'#fff':'';
+  build();
+}
+
+function setDZ(){
+  var ak=['lo','s145','s200'];
+  for(var ii=0;ii<ak.length;ii++) dz[ak[ii]]=true;
+  gid('dz-all').style.background='#e07800';
+  gid('dz-all').style.color='#fff';
+  build();
+}
+
+function rstDZ(){
+  var ak=['lo','s145','s200'];
+  for(var ii=0;ii<ak.length;ii++) dz[ak[ii]]=false;
+  gid('dz-all').style.background='';
+  gid('dz-all').style.color='';
+  build();
+}
+
+function initUI(){
+  var ik=['lo','s145','s200'];
+  var idmap={lo:'s-lo',s145:'s-145',s200:'s-200'};
+  var ki,kk,bt;
+  for(ki=0;ki<ik.length;ki++){
+    kk=ik[ki]; bt=gid(idmap[kk]);
+    bt.style.background=COL[kk];
+    bt.style.color='#fff';
+    bt.style.borderColor=COL[kk];
+  }
+  gid('r-liq').style.background='#2a78d6';
+  gid('r-liq').style.color='#fff';
+  gid('g-st').style.background='#2a78d6';
+  gid('g-st').style.color='#fff';
+}
+
+initUI();
+build();
+</script>
+</body>
+</html>
