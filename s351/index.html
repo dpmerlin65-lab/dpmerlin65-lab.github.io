@@ -43,11 +43,6 @@
   input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;
     background:var(--ink);border:2px solid var(--paper)}
   input:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:4px}
-  .compose{border-left:2px solid var(--rule);padding-left:14px;margin-bottom:4px}
-  .blended{font-family:var(--mono);font-size:13px;margin-bottom:16px}
-  .check{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--inkSoft);
-         margin-bottom:20px;cursor:pointer}
-  .check input{accent-color:var(--ink);width:14px;height:14px}
   .headline{font-family:var(--mono);font-size:58px;line-height:1.05;letter-spacing:-.03em;
             font-variant-numeric:tabular-nums;margin:4px 0 2px}
   .sub{font-family:var(--serif);font-size:15px;color:var(--inkSoft)}
@@ -78,9 +73,9 @@
 <header>
   <div class="eyebrow">Seed an ETF, or sell and buy the index</div>
   <h1>s351 economics</h1>
-  <p class="standfirst">Deferral bought with a fee. Market exposure is held equal across both
-  paths and the deferred tax is scored as cash, so what remains is the tax difference alone
-  &mdash; per $100 of the contributed basket.</p>
+  <p class="standfirst">The prize is the deferred tax invested at cash. The fee is charged on
+  the whole balance. Market exposure is held equal across both paths, so what remains is the
+  tax difference alone &mdash; no return assumption, per $100 of the contributed basket.</p>
 </header>
 
 <div class="grid">
@@ -96,27 +91,11 @@
       <div class="note">Fund fee minus the index alternative</div>
     </div>
 
-    <div class="ctl" id="gWrap">
+    <div class="ctl">
       <div class="row"><label for="g">Blended gain on the basket</label><span class="val" id="gV"></span></div>
       <input type="range" id="g" min="0" max="1" step="0.01" value="0.6">
-      <div class="note">Everything contributed, not just the concentrated name</div>
+      <div class="note">The whole contributed basket &mdash; §358 blends the basis, so the sleeve dilutes it</div>
     </div>
-
-    <div class="compose" id="composeWrap" hidden>
-      <div class="ctl">
-        <div class="row"><label for="wc">Concentrated name</label><span class="val" id="wcV"></span></div>
-        <input type="range" id="wc" min="0.05" max="1" step="0.01" value="0.2">
-        <div class="note">Sponsors typically cap near 20%</div>
-      </div>
-      <div class="ctl">
-        <div class="row"><label for="gs">Gain on the diversifier sleeve</label><span class="val" id="gsV"></span></div>
-        <input type="range" id="gs" min="0" max="1" step="0.01" value="0.5">
-      </div>
-      <div class="blended" id="blended"></div>
-    </div>
-
-    <label class="check"><input type="checkbox" id="compose">
-      Build the basket from a concentrated name plus a sleeve</label>
 
     <div class="ctl">
       <div class="row"><label for="T">Horizon</label><span class="val" id="TV"></span></div>
@@ -158,8 +137,7 @@
 <script>
 (function(){
   "use strict";
-  var S = { tau:0.238, fa:0.02275, psi:0.0034, T:20, g:0.6,
-            stepUp:false, compose:false, wc:0.2, gs:0.5 };
+  var S = { tau:0.238, fa:0.02275, psi:0.0034, T:20, g:0.6, stepUp:false };
 
   function value(p){
     var N = 1 - p.tau*p.g,
@@ -268,7 +246,7 @@
   function $(id){ return document.getElementById(id); }
 
   function render(){
-    var gEff = S.compose ? (S.wc*1 + (1-S.wc)*S.gs) : S.g;
+    var gEff = S.g;
     var p = {tau:S.tau, fa:S.fa, psi:S.psi, T:S.T, g:gEff, stepUp:S.stepUp};
     var v = 100*value(p),
         gross = 100*value({tau:p.tau,fa:p.fa,psi:0,T:p.T,g:gEff,stepUp:p.stepUp}),
@@ -277,14 +255,9 @@
 
     $("psiV").textContent=pct(S.psi,2);
     $("gV").textContent=pct(S.g,0);
-    $("wcV").textContent=pct(S.wc,0);
-    $("gsV").textContent=pct(S.gs,0);
     $("TV").textContent=S.T+" yr";
     $("tauV").textContent=pct(S.tau,1);
     $("faV").textContent=pct(S.fa,2);
-    $("blended").textContent="blended gain = "+pct(gEff,1);
-    $("gWrap").hidden=S.compose;
-    $("composeWrap").hidden=!S.compose;
     $("tabSell").setAttribute("aria-pressed",String(!S.stepUp));
     $("tabDeath").setAttribute("aria-pressed",String(S.stepUp));
 
@@ -295,12 +268,12 @@
       (S.stepUp ? "shares held until the basis steps up" : "shares sold after "+S.T+" years")+
       ' &middot; <span class="alt">'+(S.stepUp?"sells instead: ":"held to death: ")+money(other)+"</span>";
 
-    var deferredTax=100*S.tau*gEff, feeCost=100*(1-Math.exp(-S.psi*S.T)),
-        capture = gross!==0 ? (gross-v)/Math.abs(gross) : 0;
-    var rows=[["Tax deferred","$"+deferredTax.toFixed(2),"created at contribution"],
+    var deferredTax=100*S.tau*gEff, feeCost=gross-v,
+        capture = gross!==0 ? feeCost/Math.abs(gross) : 0;
+    var rows=[["Tax deferred","$"+deferredTax.toFixed(2),"at contribution"],
+              ["Deferral prize",money(gross),"the same trade, no fee gap"],
               ["Fee cost","\u2212$"+feeCost.toFixed(2),pct(S.psi,2)+" over "+S.T+" yr"],
-              ["Before fees",money(gross),"same trade, no fee gap"],
-              ["Fund's share",gross>0?(capture*100).toFixed(0)+"%":"\u2014","of the benefit"]];
+              ["Fund's share",gross>0?(capture*100).toFixed(0)+"%":"\u2014","of the prize"]];
     $("stats").innerHTML=rows.map(function(r){
       return '<div><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div><div class="n">'+r[2]+'</div></div>';
     }).join("");
@@ -329,14 +302,13 @@
          : ". The deferral compounds on the tax deferred; the fee compounds on the whole basket.");
   }
 
-  [["psi","psi"],["g","g"],["wc","wc"],["gs","gs"],["T","T"],["tau","tau"],["fa","fa"]]
+  [["psi","psi"],["g","g"],["T","T"],["tau","tau"],["fa","fa"]]
     .forEach(function(pair){
       $(pair[0]).addEventListener("input",function(e){
         S[pair[1]] = pair[1]==="T" ? parseInt(e.target.value,10) : parseFloat(e.target.value);
         render();
       });
     });
-  $("compose").addEventListener("change",function(e){ S.compose=e.target.checked; render(); });
   $("tabSell").addEventListener("click",function(){ S.stepUp=false; render(); });
   $("tabDeath").addEventListener("click",function(){ S.stepUp=true; render(); });
 
